@@ -5,18 +5,12 @@ using UnityEngine.Networking;
 
 public class CameraController : MonoBehaviour
 {
-    public float Distance;
-    public PlayerController thePlayer;
-    
-    // Start is called before the first frame update
-    void Start()
-    {
-        thePlayer = FindObjectOfType<PlayerController>();
-    }
+    public float Distance; // Дистанция для смещения камеры относительно игрока
+    public GameObject Player; // Игрок
 
     // Update is called once per frame
     void Update()
     {
-        transform.position = new Vector3(thePlayer.transform.position.x + Distance, transform.position.y,transform.position.z);
+        transform.position = new Vector3(Player.transform.position.x + Distance, transform.position.y,transform.position.z);
     }
 }

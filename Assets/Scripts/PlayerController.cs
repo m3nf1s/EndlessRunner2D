@@ -9,21 +9,20 @@ using Random = UnityEngine.Random;
 
 public class PlayerController : MonoBehaviour
 {
-    public float moveSpeed;
-    public float jumpForce;
+    public bool isGround; // находится игрок на земле или нет
+    public LayerMask Grounds; // список масок с которым будет происходить проверка на нахождение на земле
 
-    public bool isGround;
-    public LayerMask Grounds;
-
-    private Rigidbody2D rb;
-    private SpriteRenderer sr;
-    private Collider2D characterCollider;
+    private float moveSpeed = 7.0f; // скорость передвижения
+    private float jumpSpeed = 13.0f; // скорость прыжка
+    private Rigidbody2D rb2D; // доступ к компоненту RigidBody 2D
+    private SpriteRenderer sr; // доступ к визуальному состовляющему GameObject
+    private Collider2D characterCollider; // доступ к компоненту Collider2D
 
     void Start()
     {
         sr = GetComponent<SpriteRenderer>();
 
-        rb = GetComponent<Rigidbody2D>();
+        rb2D = GetComponent<Rigidbody2D>();
 
         characterCollider = GetComponent<Collider2D>();
 
@@ -32,17 +31,36 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        if (!GameManager.instance.gameOver)
+        {
+            PlayerMove();
+        }
+        else
+            rb2D.velocity = Vector2.zero;;
+    }
+
+    /// <summary>
+    /// Передвижение игрока
+    /// </summary>
+    void PlayerMove()
+    {
         isGround = Physics2D.IsTouchingLayers(characterCollider, Grounds);
 
-        rb.velocity = new Vector2(moveSpeed, rb.velocity.y);
+        rb2D.velocity = new Vector2(moveSpeed, rb2D.velocity.y);
 
         if (Input.GetButtonDown("Jump") && isGround)
-            rb.velocity = new Vector2(rb.velocity.x, jumpForce);
+            rb2D.velocity = new Vector2(rb2D.velocity.x, jumpSpeed);
 
         if (!isGround)
         {
             if (Input.GetButtonDown("Jump"))
                 sr.color = sr.color == Color.red ? Color.blue : Color.red;
         }
+    }
+
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if(other.gameObject.tag == "DeathZone")
+            GameManager.instance.GameOver();
     }
 }

@@ -2,12 +2,19 @@
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using UnityEngine;
+using UnityEngine.Experimental.PlayerLoop;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager instance = null;
-    public LevelGenerator LvlGenerator;
+    public static GameManager instance = null; // Синглтон
+    public Text textScore; // Текст очков во время игры
+    public Text menuTextScore; // Текст очков в меню    
+    public GameObject Panel; // Панель появляющаяся при проигрыше
+    public bool gameOver = false; // Икончание игры
+
+    private int Score; // Количество очков
 
     void Awake()
     {
@@ -17,38 +24,42 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
 
         DontDestroyOnLoad(gameObject);
-
-        LvlGenerator = GetComponent<LevelGenerator>();
     }
 
-    void InitGame()
+    /// <summary>
+    /// Добавление очков
+    /// </summary>
+    public void AddScore()
     {
-
+        Score++;
+        textScore.text = "Score: " + Score.ToString();
+        menuTextScore.text = "Score: " + Score.ToString();
     }
 
+    /// <summary>
+    /// Окончание игры
+    /// </summary>
     public void GameOver()
     {
-        LvlGenerator.SceneSetup();
+        gameOver = true;
+        textScore.enabled = false;
+        Panel.SetActive(true);
     }
 
-    void Quit()
+    /// <summary>
+    /// Перезагрузка игры
+    /// </summary>
+    public void Restart()
     {
         Destroy(gameObject);
+        SceneManager.LoadScene(0);
+    }
+
+    /// <summary>
+    /// Выход из игры
+    /// </summary>
+    public void Exit()
+    {
         Application.Quit();
-    }
-
-    void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode)
-    {
-        InitGame();
-    }
-
-    void OnEnable()
-    {
-        SceneManager.sceneLoaded += OnLevelFinishedLoading;
-    }
-
-    void OnDisable()
-    {
-        SceneManager.sceneLoaded -= OnLevelFinishedLoading;
     }
 }
