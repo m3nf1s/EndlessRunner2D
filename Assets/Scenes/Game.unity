@@ -1404,7 +1404,7 @@ GameObject:
   - component: {fileID: 1836626273}
   - component: {fileID: 1836626275}
   m_Layer: 0
-  m_Name: LevelGenerator
+  m_Name: PlatformGenerator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
