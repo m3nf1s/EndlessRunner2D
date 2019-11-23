@@ -1,5 +1,5 @@
 # EndlessRunner2D
-## Тестовое проект на Unity3D
+## Testing Task Unity3D
 
 Need to create a simple runner with interactions with the game environment.
 
